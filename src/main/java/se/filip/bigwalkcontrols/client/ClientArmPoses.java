@@ -1,5 +1,11 @@
 package se.filip.bigwalkcontrols.client;
 
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,6 +38,13 @@ public class ClientArmPoses {
             false,
             (IArmPoseTransformer) ClientArmPoses::applyArmSide);
 
+    // Fix for sneaking changes direction of forward arms (smoothing)
+    private static final Map<UUID, Float> SNEAK_ANGLES = new ConcurrentHashMap<>();
+
+    private static final float SNEAK_TARGET = (float) Math.toRadians(20);
+
+    private static final float SNEAK_SMOOTHING = 0.35f;
+
     private static void applyArmUp(
             HumanoidModel<?> model,
             LivingEntity entity,
@@ -62,10 +75,16 @@ public class ClientArmPoses {
             armPart = model.rightArm;
         }
 
-        // Armen pekar dit huvudet tittar
-        armPart.xRot = model.head.xRot - (float) Math.PI / 2.0f;
+        // The arm points where the head looks
+        // and changes direction when sneaking
+        float sneakAngle = getSneakAngle(entity);
+
+        armPart.xRot = model.head.xRot
+                - (float) Math.PI / 2.0f
+                - sneakAngle;
         armPart.yRot = model.head.yRot;
         armPart.zRot = 0.0f;
+
     }
 
     private static void applyArmSide(
@@ -82,6 +101,37 @@ public class ClientArmPoses {
         } else {
             armPart.zRot = (float) Math.toRadians(90);
         }
+    }
+
+    public static void updateSneakAngle(LivingEntity entity) {
+
+        float current = SNEAK_ANGLES.getOrDefault(
+                entity.getUUID(),
+                0.0f);
+
+        float target = entity.isShiftKeyDown()
+                ? SNEAK_TARGET
+                : 0.0f;
+
+        current += (target - current)
+                * SNEAK_SMOOTHING;
+
+        // Snap very tiny differences to the target.
+        if (Math.abs(target - current) < 0.001f) {
+            current = target;
+        }
+
+        SNEAK_ANGLES.put(
+                entity.getUUID(),
+                current);
+    }
+
+    private static float getSneakAngle(
+            LivingEntity entity) {
+
+        return SNEAK_ANGLES.getOrDefault(
+                entity.getUUID(),
+                0.0f);
     }
 
 }

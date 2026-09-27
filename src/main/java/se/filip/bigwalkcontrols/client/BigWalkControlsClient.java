@@ -175,6 +175,11 @@ public class BigWalkControlsClient {
                 if (mc.player == null) {
                         return;
                 }
+                if (mc.level != null) {
+                        for (Player player : mc.level.players()) {
+                                ClientArmPoses.updateSneakAngle(player);
+                        }
+                }
 
                 ArmNetwork.ArmState left = getLocalLeftState();
                 ArmNetwork.ArmState right = getLocalRightState();
