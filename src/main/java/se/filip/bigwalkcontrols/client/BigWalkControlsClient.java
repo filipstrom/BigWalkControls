@@ -9,8 +9,10 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -389,6 +391,7 @@ public class BigWalkControlsClient {
                         model.rightArm.visible = oldRightArmVisible && showRight;
 
                         model.rightSleeve.visible = oldRightSleeveVisible && showRight;
+
                 }
         }
 
@@ -488,9 +491,44 @@ public class BigWalkControlsClient {
                                 player,
                                 partialTick);
 
-                // Save the user's setting for the shadow so we can restore it when we are done
+                // Save the user's setting for the so we can restore it when we are done
                 boolean oldRenderShadow = mc.options.entityShadows().get();
 
+                // Save items, so we can reset them after rendering
+                // if we need to not show them
+                ItemStack oldMainHand = player.getMainHandItem();
+                ItemStack oldOffHand = player.getOffhandItem();
+
+                boolean showLeft = left != ArmNetwork.ArmState.NORMAL;
+                boolean showRight = right != ArmNetwork.ArmState.NORMAL;
+
+                boolean mainHandIsRight = player.getMainArm() == HumanoidArm.RIGHT;
+                if (mainHandIsRight) {
+                        if (!showRight) {
+                                player.setItemInHand(
+                                                InteractionHand.MAIN_HAND,
+                                                ItemStack.EMPTY);
+                        }
+                        if (!showLeft) {
+                                player.setItemInHand(
+                                                InteractionHand.OFF_HAND,
+                                                ItemStack.EMPTY);
+                        }
+
+                } else {
+
+                        if (!showLeft) {
+                                player.setItemInHand(
+                                                InteractionHand.MAIN_HAND,
+                                                ItemStack.EMPTY);
+                        }
+
+                        if (!showRight) {
+                                player.setItemInHand(
+                                                InteractionHand.OFF_HAND,
+                                                ItemStack.EMPTY);
+                        }
+                }
                 poseStack.pushPose();
 
                 renderingOwnBody = true;
@@ -510,6 +548,13 @@ public class BigWalkControlsClient {
 
                 } finally {
                         dispatcher.setRenderShadow(oldRenderShadow);
+                        player.setItemInHand(
+                                        InteractionHand.MAIN_HAND,
+                                        oldMainHand);
+
+                        player.setItemInHand(
+                                        InteractionHand.OFF_HAND,
+                                        oldOffHand);
                         renderingOwnBody = false;
                         poseStack.popPose();
                 }
