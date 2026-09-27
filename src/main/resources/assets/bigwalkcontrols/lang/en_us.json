@@ -1,0 +1,13 @@
+{
+  "itemGroup.bigwalkcontrols": "Example Mod Tab",
+  "block.bigwalkcontrols.example_block": "Example Block",
+  "item.bigwalkcontrols.example_item": "Example Item",
+
+  "bigwalkcontrols.configuration.title": "Big Walk Controls Configs",
+  "bigwalkcontrols.configuration.section.bigwalkcontrols.common.toml": "Big Walk Controls Configs",
+  "bigwalkcontrols.configuration.section.bigwalkcontrols.common.toml.title": "Big Walk Controls Configs",
+  "bigwalkcontrols.configuration.items": "Item List",
+  "bigwalkcontrols.configuration.logDirtBlock": "Log Dirt Block",
+  "bigwalkcontrols.configuration.magicNumberIntroduction": "Magic Number Text",
+  "bigwalkcontrols.configuration.magicNumber": "Magic Number"
+}

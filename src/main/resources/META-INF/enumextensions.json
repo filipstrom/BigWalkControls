@@ -1,0 +1,31 @@
+{
+    "entries": [
+        {
+            "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+            "name": "BIGWALKCONTROLS_ARM_UP",
+            "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+            "parameters": {
+                "class": "se/filip/bigwalkcontrols/client/ClientArmPoses",
+                "field": "ARM_UP"
+            }
+        },
+        {
+            "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+            "name": "BIGWALKCONTROLS_ARM_FORWARD",
+            "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+            "parameters": {
+                "class": "se/filip/bigwalkcontrols/client/ClientArmPoses",
+                "field": "ARM_FORWARD"
+            }
+        },
+        {
+            "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+            "name": "BIGWALKCONTROLS_ARM_SIDE",
+            "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+            "parameters": {
+                "class": "se/filip/bigwalkcontrols/client/ClientArmPoses",
+                "field": "ARM_SIDE"
+            }
+        }
+    ]
+}
